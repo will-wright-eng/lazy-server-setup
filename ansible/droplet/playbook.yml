@@ -1,0 +1,45 @@
+---
+- hosts: droplettwl
+  become: yes
+  remote_user: your_username
+  tasks:
+    - name: Update apt cache
+      apt: update_cache=yes
+
+    - name: Upgrade all packages to the latest version
+      apt:
+        upgrade: dist
+
+    - name: Install required packages
+      apt:
+        name: ['apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common']
+        state: present
+
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable
+        state: present
+
+    - name: Update apt and install docker-ce
+      apt: update_cache=yes name=docker-ce state=latest
+
+    - name: Install Docker Compose
+      get_url:
+        url: https://github.com/docker/compose/releases/download/1.29.2/docker-compose-`uname -s`-`uname -m`
+        dest: /usr/local/bin/docker-compose
+        mode: '0755'
+
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Install Fail2ban
+      apt:
+        name: fail2ban
+        state: present
