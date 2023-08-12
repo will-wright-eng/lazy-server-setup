@@ -1,0 +1,7 @@
+webservers:
+  hosts:
+    droplettwl:
+      ansible_host: twl
+      http_port: 22
+  vars:
+    ansible_user: alfred
